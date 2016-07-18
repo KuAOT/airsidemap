@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="smartbrief">
+<head>
+    <meta charset="UTF-8">
+    <title>Airside Map</title>
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/leaflet/leaflet.js"></script>
+    <script src="js/angular-leaflet-directive.min.js"></script>
+    <script src="js/leaflet/leaflet.draw.js"></script>
+
+    <link rel="stylesheet" href="js/leaflet/leaflet.css"/>
+    <link rel="stylesheet" href="js/leaflet/leaflet.draw.css"/>
+
+    <script>
+//        var app = angular.module("smartbrief", ['leaflet-directive']);
+//        app.controller("AirsideCtrl", [ "$scope", function($scope) {
+//            angular.extend($scope,{
+//                center: {
+//                    lat: 0,
+//                    lng: 0,
+//                    zoom: 0
+//                },
+//                layers: {
+//                    baselayers: {
+//                        andes: {
+//                            type: 'imageOverlay',
+//                            url: 'img/airside.jpg',
+//                            bounds: [[-540, -960], [540, 960]]
+//                        }
+//                    }
+//                }
+//
+//            })
+//        }]);
+
+
+        var app = angular.module("smartbrief", ["leaflet-directive"]);
+        app.controller("AirsideCtrl", [ "$scope", "leafletData", "leafletBoundsHelpers", function($scope,  leafletData, leafletBoundsHelpers) {
+            var maxBounds = leafletBoundsHelpers.createBoundsFromArray([[-540, -960], [540, 960]]);
+            var drawnItems = new L.FeatureGroup(), options = { edit: { featureGroup: drawnItems } }, drawControl = new L.Control.Draw(options);
+            angular.extend($scope, {
+                defaults: {
+                    scrollWheelZoom: true,
+                    crs: 'Simple',
+                    maxZoom: 3
+                },
+                maxBounds: maxBounds,
+                layers: {
+                    baselayers: {
+                        airside: {
+                            name: 'stand',
+                            type: 'imageOverlay',
+                            url: 'img/airside.jpg',
+                            bounds: [[-540, -960], [540, 960]]
+                        }
+                    },
+                },
+                controls: {
+                    custom:[drawControl],
+                    draw: {}
+                }
+            });
+
+        }]);
+    </script>
+    <script>
+        <!---->
+//        var app = angular.module("smartbrief", ["leaflet-directive"]);
+//        app.controller("AirsideCtrl", [ "$scope", "leafletData", function($scope, leafletData) {
+//
+//            angular.extend($scope, {
+//                center: {
+//                    lat: 60,
+//                    lng: 150,
+//                    zoom: 3
+//                },
+//
+//                layers: {
+//                    baselayers: {
+//                        airside: {
+//                            name: 'stand',
+//                            type: 'imageOverlay',
+//                            url: 'img/airside.jpg',
+//                            bounds: [[0, 0], [80, 240]]
+//                        }
+//                    },
+//                    overlays: {
+//                        draw: {
+//                            name: 'draw',
+//                            type: 'group',
+//                            visible: true,
+//                            layerParams: {
+//                                showOnSelector: true
+//                            }
+//                        }
+//                    }
+//                },
+//                controls: {
+//                    draw: {
+//                        draw:{
+//                            marker:false,
+//                            circle:false,
+//                            polyline:false,
+//                            polygon:false
+//                        },
+//                        edit:{
+//                            featureGroup: editableLayers
+//                        }
+//                    }
+//                }
+//            });
+//
+//
+//
+//            var handle = {
+//                created: function(e,leafletEvent, leafletObject, model, modelName) {
+//                    drawnItems.addLayer(leafletEvent.layer);
+//                },
+//                edited: function(arg) {},
+//                deleted: function(arg) {
+//                    var layers;
+//                    layers = arg.layers;
+//                    drawnItems.removeLayer(layer);
+//                },
+//                drawstart: function(arg) {},
+//                drawstop: function(arg) {},
+//                editstart: function(arg) {},
+//                editstop: function(arg) {},
+//                deletestart: function(arg) {},
+//                deletestop: function(arg) {}
+//            };
+//            var drawEvents = leafletDrawEvents.getAvailableEvents();
+//            drawEvents.forEach(function(eventName){
+//                $scope.$on('leafletDirectiveDraw.' + eventName, function(e, payload) {
+//                    //{leafletEvent, leafletObject, model, modelName} = payload
+//                    var leafletEvent, leafletObject, model, modelName; //destructuring not supported by chrome yet :(
+//                    leafletEvent = payload.leafletEvent, leafletObject = payload.leafletObject, model = payload.model,
+//                            modelName = payload.modelName;
+//                    handle[eventName.replace('draw:','')](e,leafletEvent, leafletObject, model, modelName);
+//                });
+//            });
+//
+////
+////
+////            leafletData.getMap().then(function(map) {
+////                leafletData.getLayers().then(function(baselayers) {
+////                    editableLayers = baselayers.overlays.draw;
+////                    map.on('draw:created', function (e) {
+////                        var layer = e.layer;
+////                        editableLayers.addLayer(layer);
+////                        console.log(JSON.stringify(layer.toGeoJSON()));
+////                    });
+////                });
+////            });
+//        }]);
+    </script>
+
+</head>
+
+<body ng-controller="AirsideCtrl">
+<!--<leaflet controls="controls" layers="layers" maxBounds="maxBounds" height="480px" width="100%"></leaflet>-->
+<!--<leaflet lf-center="center" controls="controls" layers="layers" width="100%" height="480px"></leaflet>-->
+<leaflet lf-center="map.center" lf-draw="map.drawOptions" height="480px" width="100%"></leaflet>
+
+<script src="js/leaflet/leaflet.js"></script>
+<script src="js/leaflet/leaflet.draw-src.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/angular-simple-logger.js"></script>
+<script src="js/angular-leaflet-directive.min.js"></script>
+
+<script src="js/leaflet/ui-leaflet.js"></script>
+<script src="js/leaflet/ui-leaflet-draw.js"></script>
+
+<link rel="stylesheet" href="js/leaflet/leaflet.css">
+<link rel="stylesheet" href="js/leaflet/leaflet.draw.css">
+<script>
+    'use strict';
+    angular.module("smartbrief", ['ui-leaflet'])
+            .controller('AirsideCtrl', function ($scope, leafletDrawEvents) {
+                var drawnItems = new L.FeatureGroup();
+                angular.extend($scope, {
+                    map: {
+                        center: {
+                            lat: 42.20133,
+                            lng: 2.19110,
+                            zoom: 11
+                        },
+                        drawOptions: {
+                            position: "bottomright",
+                            draw: {
+                                polyline: {
+                                    metric: false
+                                },
+                                polygon: {
+                                    metric: false,
+                                    showArea: true,
+                                    drawError: {
+                                        color: '#b00b00',
+                                        timeout: 1000
+                                    },
+                                    shapeOptions: {
+                                        color: 'blue'
+                                    }
+                                },
+                                circle: {
+                                    showArea: true,
+                                    metric: false,
+                                    shapeOptions: {
+                                        color: '#662d91'
+                                    }
+                                },
+                                marker: true
+                            },
+                            edit: {
+                                featureGroup: drawnItems,
+                                remove: true
+                            }
+                        }
+                    }
+                });
+                var handle = {
+                    created: function(e,leafletEvent, leafletObject, model, modelName) {
+                        drawnItems.addLayer(leafletEvent.layer);
+                    },
+                    edited: function(arg) {},
+                    deleted: function(arg) {
+                        var layers;
+                        layers = arg.layers;
+                        drawnItems.removeLayer(layer);
+                    },
+                    drawstart: function(arg) {},
+                    drawstop: function(arg) {},
+                    editstart: function(arg) {},
+                    editstop: function(arg) {},
+                    deletestart: function(arg) {},
+                    deletestop: function(arg) {}
+                };
+                var drawEvents = leafletDrawEvents.getAvailableEvents();
+                drawEvents.forEach(function(eventName){
+                    $scope.$on('leafletDirectiveDraw.' + eventName, function(e, payload) {
+                        //{leafletEvent, leafletObject, model, modelName} = payload
+                        var leafletEvent, leafletObject, model, modelName; //destructuring not supported by chrome yet :(
+                        leafletEvent = payload.leafletEvent, leafletObject = payload.leafletObject, model = payload.model,
+                                modelName = payload.modelName;
+                        handle[eventName.replace('draw:','')](e,leafletEvent, leafletObject, model, modelName);
+                    });
+                });
+            });
+</script>
+
+
+</body>
+
+</html>
